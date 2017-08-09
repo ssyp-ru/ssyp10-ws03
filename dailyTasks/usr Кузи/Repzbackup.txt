@@ -1,0 +1,70 @@
+%%Repmrjrbyrjd Cthutq 09.07
+-module(repz).
+-export([archive/3]).
+-export([archive/2]).
+%%-export([archivet/3]).
+%%-export([pack/2]).
+%%-export([newfile/2]).
+%%-export([message/0]).
+%%magic string 16b
+%%8b, 2b - кол-во папок
+
+%%newfile(Filename,Files) ->
+%%   {ok,F}=file:open(Filename, [read,binary]),
+%%   [F|Files].									добавляем файл в список файлов
+   
+archive(Filename,Files) ->
+   {ok, L}=file:open(Filename,[write,binary]),
+   S=["Repz v0.5"|size(Files)]
+   file:write(L, <<"Repz v0.5":128>>),
+   archive(L,Files,[]).
+
+archive(L,[],Strokes) ->
+   file:write(L, list_to_binary(Strokes)),
+   file:write(L, size(Strokes))
+archive(L,Files,Strokes) ->
+   [F|File]=Files,								%%Узнаем первый файл
+   Name=element(1,F), 							%%
+   write(L,Name),
+   archive(L,File,[F|Strokes]).
+   
+write(Name) ->
+   {ok,F}=file:open(Name,[read,binary]),
+   {ok,S}=file:read_file_info(Name),
+   Size=element(2,S),
+   T=time(),
+   Time=element(1,T)+element(2,T)+element(3,T),
+   Arc=[integer_to_list(Time)++".tmp"],
+   {ok,Na}=
+   Rs=rle(F,Size,Na,Arc),
+   write(F,Fa,Size).
+   
+write(File,0,F3,Size) -> {ok,S}=file:read(File, Size-trunc(Size/1024.2)),
+   file:write(F3,S), file:close(File);
+write(File, Steps,F3,Size) ->   {ok,S}=file:read(File, 2*1024),
+   file:write(F3,S), write(File,Steps-1,F3,Size). 
+
+size(Files) ->
+   size(Files,0).
+
+size(Files,Now) ->
+   [F|File]=Files,
+   S=element(1,F),
+   Si=file:read_file_info(S),
+   size(File,Now+element(2,Si).
+
+rle(File,0,Arc,Na) -> element(2,file:read_file_info("Na")).
+rle(File,Size,Arc,Na) ->
+    if Size>=2048 -> {ok,Ft}=file:read(File, 2048);
+	   Size<2048 -> {ok,Ft}=file:read(File,Size*2048) end, end,
+	L=binary_to_list(Ft)
+	S=rlest(L,0,"",[]),
+	file:write(Arc, list_to_binary(S)),
+    if Size>=2048 -> rle(File,Size-2048,Arc,Na);
+	   Size<2048 -> rle(File, 0,Arc,Na) end.
+    
+    
+    
+    
+    
+    

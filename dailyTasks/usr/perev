@@ -1,0 +1,7 @@
+-module(perev).
+-export[].
+
+glue(B,[]) ->
+	C = [A|B],
+	glue(B,C).
+	

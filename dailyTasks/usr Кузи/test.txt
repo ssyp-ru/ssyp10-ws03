@@ -1,0 +1,16 @@
+%%repmrorbyrjd cthutq 09.07.2010
+-module(db).
+-export([new/0]).
+-export([destroy/0]).
+-export([write/2]).
+-export([delete/2]).
+new() -> [].
+destroy() -> [].
+write(Db, El) -> [El|Db].
+
+delete(Db,Key) ->
+   L=fun(A) ->
+    if A==Key -> false;
+	   A/=Key -> true
+	end,
+   io:format(L,Db).lsfdjwejjgwjdkfjdjjghj

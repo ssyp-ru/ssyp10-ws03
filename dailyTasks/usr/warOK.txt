@@ -1,0 +1,15 @@
+-module(war).
+-export([war/2]).
+-export([start/1]).
+
+start(Name) -> spawn(war,war,[100,Name]).
+
+war(Zdor,Name)
+ -> if  Zdor =< 0 
+			->  io:format("Player ~w is dead",[Name]);
+		Zdor > 0 
+			->  receive
+					{hitme,X} -> io:format("~w hits ~w ",[X,Name]),war(Zdor-10,Name);
+					{hit,X} -> X ! ({hitme,Name}),war(Zdor,Name)
+				end 
+	end.
